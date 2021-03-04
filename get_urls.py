@@ -42,6 +42,6 @@ for line in sys.stdin:
             if len(row) > 0 and row[0].startswith('http'):
                 _print(str(row))
                 print(row[0])
-                with open(FILENAME, "a") as dest_file:
+                with open(f'{directory}{FILENAME}', "a") as dest_file:
                     dest_file.write(row[0])
                     dest_file.write('\n')
