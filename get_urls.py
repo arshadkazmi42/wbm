@@ -2,7 +2,7 @@ import sys
 import json
 
 FILENAME = 'allurls.txt'
-DEBUG = False
+DEBUG = True
 
 
 # HELPER FUNCTIONS
@@ -27,6 +27,20 @@ def _clean_input(input):
 
     return input.replace('\n', '')
 
+def _is_image_url(url):
+
+    values = url.split('?')
+    
+    if values[0].endswith('.png') or values[0].endswith('.jpg') or values[0].endswith('.svg') \
+        or values[0].endswith('.jpeg') or values[0].endswith('.css'):
+        return True
+
+    return False
+
+def _is_valid_url(url):
+
+    return not _is_image_url(url)
+
 
 directory = _get_directory()
 
@@ -39,7 +53,7 @@ for line in sys.stdin:
         data = json.load(f)
 
         for row in data:
-            if len(row) > 0 and row[0].startswith('http'):
+            if len(row) > 0 and row[0].startswith('http') and _is_valid_url(row[0]):
                 _print(str(row))
                 print(row[0])
                 with open(f'{directory}/{FILENAME}', "a") as dest_file:

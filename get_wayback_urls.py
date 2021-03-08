@@ -42,8 +42,16 @@ def _get_filename(url):
 
 def _get_directory(url):
 
-  values = url.split('.')
-  return values[len(values) - 2]
+  hostname = parse.urlparse(url).hostname
+  values = hostname.split('.')
+
+  if len(values) == 2:
+      return values[0]
+
+  if len(values) == 3:
+      return values[1]
+
+  return hostname
 
 def _create_directory(directory):
 
@@ -57,6 +65,7 @@ url = WAYBACK_URL.format(requote_uri(input_url))
 
 print(input_url)
 _print(url)
+_print(_get_directory(input_url))
 
 response = _get_response(url)
 result = response.json()
@@ -64,11 +73,11 @@ result = response.json()
 _print(result)
 
 filename = _get_filename(input_url)
-directory = _get_directory(input_url)
+#directory = _get_directory(input_url)
 
-_create_directory(directory)
+#_create_directory(directory)
 
-_print(f'{directory}/{filename}.json')
+_print(f'{filename}.json')
 
-with open(f'{directory}/{filename}.json', 'w') as outfile:
+with open(f'{filename}.json', 'w') as outfile:
     json.dump(result, outfile)
